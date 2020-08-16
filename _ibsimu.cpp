@@ -28,10 +28,38 @@
 
 namespace py = pybind11;
 
+
+void set_message() {
+    ibsimu.set_message_threshold(MSG_VERBOSE, 2);
+} 
+
+void simu(EpotBiCGSTABSolver solver, EpotField epot, MeshScalarField scharge, EpotEfield efield,MeshVectorField  bfield, ParticleDataBase3D pdb)
+{
+    using namespace std;
+    size_t nIteration = 1;  
+    for( size_t i = 0; i < nIteration; i++ ) {
+        cout << "Iteration: " << i << endl;
+        solver.solve( epot, scharge );
+        efield.recalculate();
+        pdb.clear();
+        pdb.add_cylindrical_beam_with_energy( 10000, 1, 1, 1,   
+                    30.0e3, 0, 0,
+                    Vec3D(0,0,-10.0e-3),
+                    Vec3D(1,0,0),
+                    Vec3D(0,1,0),
+                    68.e-3);
+
+        pdb.iterate_trajectories( scharge, efield, bfield );
+    }
+}              
+
 PYBIND11_MODULE(_ibsimu, m)
 {
 
+    m.def("set_message", &set_message, "set_message");
     //py::def("set_message_threshold", &ibsimu::set_message_threshold);
+
+    m.def("simu", &simu, "Run script");
 
     py::class_<Solid>(m, "Solid");
     py::class_<MyDXFEntities>(m, "MyDXFEntities")
@@ -47,7 +75,7 @@ PYBIND11_MODULE(_ibsimu, m)
             "get_entities", [](MyDXFFile &self) {
                 return self.get_entities();
             },
-            py::return_value_policy::reference);
+            py::return_value_policy::reference_internal);
 
     py::class_<DXFSolid, Solid>(m, "DXFSolid")
         .def(py::init<MyDXFFile *, const std::string &>())
@@ -124,6 +152,12 @@ PYBIND11_MODULE(_ibsimu, m)
         .def("set_pexp_plasma", &EpotBiCGSTABSolver::set_pexp_plasma)
         .def("solve", &EpotBiCGSTABSolver::solve);
 
+    py::class_<CallbackFunctor>(m, "CallbackFunctor");
+    py::class_<CallbackFunctorD_V, CallbackFunctor>(m, "CallbackFunctorD_V");
+
+    py::class_<PPlasmaBfieldSuppression, CallbackFunctorD_V>(m, "PPlasmaBfieldSuppression")
+        .def(py::init<const MeshScalarField &, double>());
+
     py::class_<ParticleDataBase3D>(m, "ParticleDataBase3D")
         .def(py::init([](const Geometry &geom) {
             ibsimu.set_message_threshold(MSG_VERBOSE, 2);
@@ -136,15 +170,9 @@ PYBIND11_MODULE(_ibsimu, m)
             std::copy(std::begin(v), std::end(v), mirror);
             self.set_mirror(mirror);
         })
-        .def("set_bfield_suppression", [](ParticleDataBase3D &self, EpotField epot, double phi) {
-            PPlasmaBfieldSuppression psup(epot, phi);
-            self.set_bfield_suppression(&psup);
-        })
+        .def("set_bfield_suppression", &ParticleDataBase3D::set_bfield_suppression)        
         .def("get_rhosum", &ParticleDataBase3D::get_rhosum)
         .def("clear", &ParticleDataBase3D::clear)
         .def("iterate_trajectories", &ParticleDataBase3D::iterate_trajectories)
         .def("add_cylindrical_beam_with_energy", &ParticleDataBase3D::add_cylindrical_beam_with_energy);
-
-    py::class_<PPlasmaBfieldSuppression>(m, "PPlasmaBfieldSuppression")
-        .def(py::init<MeshScalarField &, double>());
 }

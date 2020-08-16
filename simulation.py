@@ -1,13 +1,15 @@
 from sys import argv
 from ibsimu import *
 
+set_message()
+
 mesh = 1e-3
 lengthX = 150.0e-3
 lengthY = 150.0e-3
 lengthZ = 25.0e-3
 startZ = -40.0e-3
 
-beamIntensity_mA = float(argv[1]) * 1e-3
+# beamIntensity_mA = float(argv[1]) * 1e-3
 V_Einzel1 = float(argv[1]) * 1.0e3
 V_Einzel2 = float(argv[2]) * 1.0e3
 V_Einzel3 = float(argv[3]) * 1.0e3
@@ -16,7 +18,7 @@ origin = Vec3D(-lengthX / 2, -lengthY / 2, startZ)
 size = Int3D(
     math.floor(lengthX / mesh) + 1,
     math.floor(lengthY / mesh) + 1,
-    math.floor(lengthZ - startZ / mesh) + 1,
+    math.floor((lengthZ - startZ) / mesh) + 1,
 )
 
 mode = GeometryMode.MODE_3D
@@ -125,8 +127,8 @@ pdb.set_mirror(pmirror)
 
 # // Bfield suppression in plasma region, will be suppressed if smaller than epot threshold //
 
-# psup = PPlasmaBfieldSuppression(epot, 10.0)
-pdb.set_bfield_suppression(epot, 10.0)
+psup = PPlasmaBfieldSuppression(epot, 10.0)
+pdb.set_bfield_suppression(psup)
 
 rhoe = pdb.get_rhosum()
 print(rhoe)
