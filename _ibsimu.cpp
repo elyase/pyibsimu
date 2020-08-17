@@ -1,7 +1,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>
-
+#include <pybind11/functional.h>
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
@@ -79,8 +79,13 @@ PYBIND11_MODULE(_ibsimu, m)
 
     py::class_<DXFSolid, Solid>(m, "DXFSolid")
         .def(py::init<MyDXFFile *, const std::string &>())
+        .def("unity", &DXFSolid::unity)        
+        .def("rotx", &DXFSolid::rotx)
+        .def("roty", &DXFSolid::roty)                
         .def("rotz", &DXFSolid::rotz)
-        .def("define_2x3_mapping", &DXFSolid::define_2x3_mapping)
+        .def("define_2x3_mapping", [](DXFSolid &self, std::function<Vec3D(const Vec3D &)> func) {
+                 self.define_2x3_mapping(func.target<Vec3D (Vec3D const&)>());
+            })      
         .def("cylindric",
              [](DXFSolid &self) {
                  self.define_2x3_mapping(DXFSolid::rotz);

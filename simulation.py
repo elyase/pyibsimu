@@ -33,8 +33,9 @@ sel = e.selection_all()
 e.scale(sel, dxfPIAlinear, 1.0e-3)
 
 plasma = DXFSolid(dxfPIAlinear, "Plasma")
-plasma.cylindric()  #   plasma->define_2x3_mapping(DXFSolid::rotz);
+plasma.cylindric()  # alternatively: plasma.define_2x3_mapping(DXFSolid.rotz) also works
 geom.set_solid(7, plasma)
+
 
 Einzel1_left_ground = DXFSolid(dxfPIAlinear, "Einzel1_left_ground")
 Einzel1_left_ground.cylindric()  #   Einzel1_left_ground->define_2x3_mapping(DXFSolid::rotz);
