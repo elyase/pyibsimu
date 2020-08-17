@@ -62,6 +62,11 @@ PYBIND11_MODULE(_ibsimu, m)
     m.def("simu", &simu, "Run script");
 
     py::class_<Solid>(m, "Solid");
+    py::class_<FuncSolid, Solid>(m, "FuncSolid")
+        .def(py::init([](std::function<bool (double,double,double)> func) {
+            return new FuncSolid(func.target<bool (double,double,double)>());
+        }));
+       
     py::class_<MyDXFEntities>(m, "MyDXFEntities")
         .def("selection_all", &MyDXFEntities::selection_all)
         .def("scale", &MyDXFEntities::scale);
@@ -79,6 +84,7 @@ PYBIND11_MODULE(_ibsimu, m)
 
     py::class_<DXFSolid, Solid>(m, "DXFSolid")
         .def(py::init<MyDXFFile *, const std::string &>())
+        .def("inside", &DXFSolid::inside)                
         .def("unity", &DXFSolid::unity)        
         .def("rotx", &DXFSolid::rotx)
         .def("roty", &DXFSolid::roty)                

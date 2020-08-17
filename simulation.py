@@ -32,10 +32,12 @@ e = dxfPIAlinear.get_entities()
 sel = e.selection_all()
 e.scale(sel, dxfPIAlinear, 1.0e-3)
 
+# example FuncSolid
+solid = FuncSolid(lambda x, y, z: (x > 1.0) and (y > 1.0) and (z > 1.0))
+
 plasma = DXFSolid(dxfPIAlinear, "Plasma")
 plasma.define_2x3_mapping(DXFSolid.rotz)  # alternatively: plasma.cylindric() also works
 geom.set_solid(7, plasma)
-
 
 Einzel1_left_ground = DXFSolid(dxfPIAlinear, "Einzel1_left_ground")
 Einzel1_left_ground.define_2x3_mapping(DXFSolid.rotz)
