@@ -33,49 +33,49 @@ sel = e.selection_all()
 e.scale(sel, dxfPIAlinear, 1.0e-3)
 
 plasma = DXFSolid(dxfPIAlinear, "Plasma")
-plasma.cylindric()  # alternatively: plasma.define_2x3_mapping(DXFSolid.rotz) also works
+plasma.define_2x3_mapping(DXFSolid.rotz)  # alternatively: plasma.cylindric() also works
 geom.set_solid(7, plasma)
 
 
 Einzel1_left_ground = DXFSolid(dxfPIAlinear, "Einzel1_left_ground")
-Einzel1_left_ground.cylindric()  #   Einzel1_left_ground->define_2x3_mapping(DXFSolid::rotz);
+Einzel1_left_ground.define_2x3_mapping(DXFSolid.rotz)
 geom.set_solid(8, Einzel1_left_ground)
 
 
 Einzel1 = DXFSolid(dxfPIAlinear, "Einzel1")
-Einzel1.cylindric()
+Einzel1.define_2x3_mapping(DXFSolid.rotz)
 geom.set_solid(9, Einzel1)
 
 Einzel1_right_ground = DXFSolid(dxfPIAlinear, "Einzel1_right_ground")
-Einzel1_right_ground.cylindric()
+Einzel1_right_ground.define_2x3_mapping(DXFSolid.rotz)
 geom.set_solid(10, Einzel1_right_ground)
 
 Einzel2_left_ground = DXFSolid(dxfPIAlinear, "Einzel2_left_ground")
-Einzel2_left_ground.cylindric()
+Einzel2_left_ground.define_2x3_mapping(DXFSolid.rotz)
 geom.set_solid(11, Einzel2_left_ground)
 
 Einzel2 = DXFSolid(dxfPIAlinear, "Einzel2")
-Einzel2.cylindric()
+Einzel2.define_2x3_mapping(DXFSolid.rotz)
 geom.set_solid(12, Einzel2)
 
 Einzel2_right_ground = DXFSolid(dxfPIAlinear, "Einzel2_right_ground")
-Einzel2_right_ground.cylindric()
+Einzel2_right_ground.define_2x3_mapping(DXFSolid.rotz)
 geom.set_solid(13, Einzel2_right_ground)
 
 Einzel3_left_ground = DXFSolid(dxfPIAlinear, "Einzel3_left_ground")
-Einzel3_left_ground.cylindric()
+Einzel3_left_ground.define_2x3_mapping(DXFSolid.rotz)
 geom.set_solid(14, Einzel3_left_ground)
 
 Einzel3 = DXFSolid(dxfPIAlinear, "Einzel3")
-Einzel3.cylindric()
+Einzel3.define_2x3_mapping(DXFSolid.rotz)
 geom.set_solid(15, Einzel3)
 
 Einzel3_right_ground = DXFSolid(dxfPIAlinear, "Einzel3_right_ground")
-Einzel3_right_ground.cylindric()
+Einzel3_right_ground.define_2x3_mapping(DXFSolid.rotz)
 geom.set_solid(16, Einzel3_right_ground)
 
 Mask = DXFSolid(dxfPIAlinear, "Mask")
-Mask.cylindric()
+Mask.define_2x3_mapping(DXFSolid.rotz)
 geom.set_solid(17, Mask)
 
 # // Simulation boundaries
