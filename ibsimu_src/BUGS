@@ -1,0 +1,7 @@
+		BUGS
+		====
+
+Particles pass through solid surface in plasma3d test if polynomial
+trajectory interpolation is used. May need major revision in collision
+detection algorithm.
+  - Taneli Kalvas, Jun 15 2015

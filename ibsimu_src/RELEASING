@@ -1,0 +1,24 @@
+			RELEASING
+			=========
+
+
+This is a list of procedures to follow when making a release of IBSimu.
+
+ - Update source tree: 'git pull origin master'
+ - Edit version number in configure.in, Makefile.am, src/Makefile.am and 
+   tests/Makefile.am. Add a new ibsimu-1.0.4.pc.in file
+ - Run 'make check' to test library and visually inspect test images.
+ - Write NEWS update for release
+ - Run 'make clean', './reconf' and 'git2changelog.py'
+ - Run 'make distcheck' to check for packaging errors and to produce
+   the release tarball.
+ - Commit changes: Run 'git commit -a' and
+   'git push origin master'
+ - Tag all files in cvs with version string with 'git tag release-1-0-4',
+   where the release version number is the current version.
+ - Push tags to server: 'git push --tags origin'
+ - Edit version number in configure.in to '1.0.4dev' to indicate 
+   after-release version of code.
+
+
+-- Taneli Kalvas <taneli.kalvas@jyu.fi>, 28 Dec 2010

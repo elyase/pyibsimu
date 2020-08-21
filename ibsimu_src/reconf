@@ -1,0 +1,55 @@
+#!/bin/bash
+
+platform='unknown'
+unamestr=$(uname)
+case $unamestr in 
+linux*)
+   platform='linux'
+   ;;
+Linux*)
+   platform='linux'
+   ;;
+darwin*)
+   platform='mac'
+   ;;
+Darwin*)
+   platform='mac'
+   ;;
+esac
+
+# Make sure ChangeLog exists
+touch ChangeLog
+
+# use git hooks from distribution
+cd .git
+rm -Rf hooks
+if [ "$platform" == 'mac' ]; then
+    ln -sf ../git_hooks hooks
+else
+    ln -sfT ../git_hooks hooks
+fi
+cd ..
+
+# Update git hash ID
+touch src/ibsimu.cpp
+echo -n "#define IBSIMU_GIT_ID \"" > src/id.hpp
+git log -1 --pretty=format:"%h, %ad" >> src/id.hpp
+echo "\"" >> src/id.hpp
+
+rm -Rf autom4te.cache
+rm -f config.cache config.log config.status config.guess config.sub
+rm -f ltconfig.h ltmain.sh libtool
+rm -f aclocal.m4
+rm -f missing install-sh
+
+if [ "$platform" == 'mac' ]; then
+    glibtoolize
+else
+    libtoolize
+fi
+# aclocal might need additional directories on msys: "-I /share/aclocal"
+aclocal -I m4
+autoconf
+autoheader
+automake -a
+
